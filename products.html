@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collections - Ibanez Legacy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --ibanez-gold: #b59a5d;
+            --text-dark: #1a1a1a;
+            --gray-soft: #f8f8f8;
+            --bg-secondary: #f2f2f2; 
+        }
+
+        body, html { 
+            margin: 0; padding: 0; 
+            background-color: var(--bg-secondary); 
+            color: var(--text-dark); 
+            font-family: 'Segoe UI', sans-serif;
+            scroll-behavior: smooth;
+        }
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 100px;
+        }
+        /* HEADER */
+        header {
+            position: fixed; top: 0; left: 0; right: 0; padding: 20px 50px;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 1000; background: white; box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+        .header-left, .header-right { display: flex; gap: 15px; flex: 1; }
+        .header-right { justify-content: flex-end; }
+        .logo img { height: 35px; filter: brightness(0); }
+        .icon-btn { background: none; border: none; font-size: 18px; cursor: pointer; padding: 10px; color: var(--text-dark); }
+
+        /* SEARCH BAR STYLE */
+        .search-container { position: relative; display: flex; align-items: center; }
+        #searchInput {
+            padding: 8px 15px; border-radius: 20px; border: 1px solid #ddd; 
+            outline: none; width: 180px; transition: 0.3s; font-size: 14px;
+        }
+        #searchInput:focus { width: 250px; border-color: var(--ibanez-gold); }
+        .search-wrapper { display: flex; align-items: center; }
+#searchInput {
+    width: 0; opacity: 0; padding: 0; border: none; 
+    border-bottom: 1px solid var(--ibanez-gold);
+    outline: none; transition: all 0.4s ease; 
+    background: transparent; font-size: 14px;
+}
+#searchInput.active { width: 200px; opacity: 1; padding: 5px 10px; margin-left: 5px; }
+
+/* CSS cho khu vực kết quả tìm kiếm */
+#searchResultSection { padding: 40px 0; border-bottom: 2px solid var(--ibanez-gold); }
+#searchResultList { display: flex; gap: 25px; flex-wrap: wrap; padding: 0 50px; }
+
+        #menuBlur { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2999; display: none; }
+        .menu-overlay {
+            position: fixed; top: 0; left: -320px; width: 300px; height: 100vh;
+            background: white; z-index: 3000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 5px 0 30px rgba(0,0,0,0.1); padding: 40px 30px;
+            box-sizing: border-box;
+        }
+        .menu-overlay.active { left: 0; }
+        .menu-links { list-style: none; padding: 0; margin: 40px 0 0 0; }
+        .menu-links li { margin-bottom: 25px; }
+        .menu-links a { 
+            text-decoration: none; color: var(--text-dark); font-size: 18px; 
+            font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
+            transition: 0.3s; display: block;
+        }
+        .menu-links a:hover { color: var(--ibanez-gold); transform: translateX(10px); }
+
+        /* OVERLAYS */
+        #menuBlur, #cartBlur { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2999; display: none; }
+        .menu-overlay, .cart-overlay { position: fixed; top: 0; height: 100vh; background: white; z-index: 3000; transition: 0.4s; box-sizing: border-box; }
+        .menu-overlay { left: -320px; width: 300px; padding: 40px 30px; }
+        .menu-overlay.active { left: 0; }
+        .cart-overlay { right: -400px; width: 350px; padding: 30px; display: flex; flex-direction: column; }
+        .cart-overlay.active { right: 0; }
+
+        /* SẢN PHẨM TRONG GIỎ */
+        .cart-item { display: flex; gap: 15px; margin-bottom: 20px; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .cart-item img { width: 60px; height: 60px; object-fit: contain; }
+        .qty-controls { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
+        .qty-btn { width: 25px; height: 25px; border: 1px solid #ddd; background: white; cursor: pointer; border-radius: 4px; font-weight: bold; }
+
+        /* COLLECTIONS */
+        .main-content { padding-top: 100px; }
+        .collection-section { padding: 60px 0; border-bottom: 1px solid #eee; background: var(--bg-secondary); }
+        .collection-header { display: flex; justify-content: space-between; align-items: center; padding: 0 50px; margin-bottom: 30px; }
+        .collection-header h2 { text-transform: uppercase; letter-spacing: 4px; font-size: 24px; }
+        
+        .product-slider { display: flex; gap: 25px; padding: 0 50px 30px; overflow-x: hidden; scroll-behavior: smooth; }
+        .product-card { 
+            width: 280px; min-width: 280px; background: white; border-radius: 12px; 
+            overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.08); position: relative; 
+        }
+        .product-img { height: 320px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        .product-img img { width: 85%; transition: 0.5s; }
+        .product-card:hover .product-img img { transform: scale(1.1); }
+        
+        .btn-group { position: absolute; top: 15px; right: -50px; display: flex; flex-direction: column; gap: 10px; transition: 0.4s; }
+        .product-card:hover .btn-group { right: 15px; }
+        .action-btn { width: 40px; height: 40px; border-radius: 50%; border: none; background: white; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; }
+        .action-btn:hover { background: var(--ibanez-gold); color: white; }
+
+        .product-info { padding: 20px; border-top: 1px solid #f9f9f9; display: flex; flex-direction: column; height: 120px; justify-content: space-between;}
+        .product-info h3 {
+            margin: 0; font-size: 15px; line-height: 1.4; display: -webkit-box; 
+            -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; height: 63px;
+        }
+        .product-info p { margin: 0; font-weight: bold; color: var(--text-dark); margin-top: 10px; }
+        .nav-btn { width: 45px; height: 45px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; }
+
+        /* LIÊN HỆ & FOOTER */
+        .contact-section { padding: 100px 50px; background: #fff; display: flex; justify-content: space-between; align-items: flex-start; gap: 50px; }
+        .contact-info { flex: 1; }
+        .contact-info h2 { font-size: 32px; letter-spacing: 3px; margin-bottom: 20px; text-transform: uppercase; }
+        .contact-details { margin-top: 30px; line-height: 2; }
+        .contact-details i { color: var(--ibanez-gold); width: 25px; }
+        .contact-form-card { flex: 0 0 380px; background: var(--gray-soft); padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(61, 61, 61, 0.05); }
+        .contact-form-card h3 { margin-top: 0; margin-bottom: 25px; text-transform: uppercase; font-size: 18px; letter-spacing: 2px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; transition: 0.3s; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--ibanez-gold); background: white; }
+        .submit-btn { width: 100%; padding: 18px; background: var(--text-dark); color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 50px; text-transform: uppercase; transition: 0.3s; }
+        .submit-btn:hover { background: var(--ibanez-gold); transform: translateY(-3px); }
+        footer { padding: 80px 50px 30px; border-top: 1px solid #eee; background: white; text-align: center; color: #bbb; font-size: 11px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+    <button class="icon-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button>
+    <div class="search-wrapper">
+        <button class="icon-btn" onclick="toggleSearch()"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <input type="text" id="searchInput" placeholder="Tìm đàn Ibanez...">
+    </div>
+</div>
+        <div class="logo"><a href="index.html"><img src="C:\Users\Hai\Downloads\ST6\Ibanez-Logo.png" alt="Logo"></a></div>
+        <div class="header-right">
+            <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
+            <button class="icon-btn" onclick="toggleCart()"><i class="fa-solid fa-bag-shopping"></i></button>
+        </div>
+    </header>
+
+    <div id="menuBlur" onclick="toggleMenu()"></div>
+    <div class="menu-overlay" id="menuOverlay">
+        <div style="text-align: right;">
+            <span style="cursor:pointer; font-size: 32px;" onclick="toggleMenu()">&times;</span>
+        </div>
+        <ul class="menu-links">
+            <li><a href="index.html" onclick="toggleMenu()">Trang chủ</a></li>
+            <li><a href="#" onclick="toggleMenu()">Giới thiệu</a></li>
+            <li><a href="products.html" onclick="toggleMenu()">Thư viện sản phẩm</a></li>
+            <li><a href="#contact-section" onclick="toggleMenu()">Liên hệ</a></li>
+        </ul>
+    </div>
+
+    <div id="cartBlur" onclick="toggleCart()"></div>
+    <div class="cart-overlay" id="cartOverlay">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3 style="margin:0">Giỏ hàng</h3>
+            <span style="cursor:pointer; font-size:24px;" onclick="toggleCart()">&times;</span>
+        </div>
+        <div id="cartContainer" style="flex:1; overflow-y:auto;">
+            <p style="text-align:center; color:#999; margin-top:50px;">Giỏ hàng trống</p>
+        </div>
+        <div id="cartFooter" style="border-top:2px solid #eee; padding-top:20px; display:none;">
+            <div style="display:flex; justify-content:space-between; font-weight:bold; margin-bottom:20px;">
+                <span>TỔNG CỘNG:</span>
+                <span id="cartSubtotal" style="color:var(--ibanez-gold)">0₫</span>
+            </div>
+            <button style="width:100%; padding:15px; background:black; color:white; border:none; border-radius:30px; cursor:pointer; font-weight:bold;">THANH TOÁN</button>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <section id="searchResultSection" class="collection-section" style="display: none; background: white;">
+            <div class="collection-header">
+                <h2 id="searchTitle">Kết quả tìm kiếm</h2>
+                <button class="icon-btn" onclick="clearSearch()"><i class="fa-solid fa-xmark"></i> ĐÓNG</button>
+            </div>
+            <div class="product-slider" id="searchResultList" style="flex-wrap: wrap; overflow-x: visible; justify-content: flex-start;">
+            </div>
+        </section>
+
+        <section class="collection-section" id="rg-series">
+            <div class="collection-header">
+                <h2>RG Series</h2>
+                <div>
+                    <button class="nav-btn" onclick="sideScroll('list1', -310)"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="nav-btn" onclick="sideScroll('list1', 310)"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="product-slider" id="list1">
+                <div class="product-card">
+                    <div class="product-img"><img src="black.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('Ibanez GRGR330EX', 11100000, 'black.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>GRGR330EX-BKF Electric Guitar</h3><p>11.100.000₫</p></div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="midnight.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('RG470DX Tokyo Midnight', 14600000, 'midnight.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>RG470DX-TMN Electric Guitar, Tokyo Midnight</h3><p>14.600.000₫</p></div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="TheCruiser_2_d1f92e55-dd94-40ec-87b0-c289d26601ab.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('RGR6BSP-IPT Iron Pewter', 36650000, 'TheCruiser_2_d1f92e55-dd94-40ec-87b0-c289d26601ab.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>RGR6BSP-IPT RG Standard Iron Pewter</h3><p>36.650.000₫</p></div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="RGA42FM-DEF Electric Guitar - Dragon Eye Burst Flat.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('RGA42FM-DEF Electric Guitar - Dragon Eye Burst Flat', 11900000, 'RGA42FM-DEF Electric Guitar - Dragon Eye Burst Flat.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>RGA42FM-DEF Electric Guitar - Dragon Eye Burst Flat</h3><p>11.900.000₫</p></div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="RG8570ZD J. Custom Electric Guitar, Royal Blue Sapphire.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('RG8570ZD J. Custom Electric Guitar, Royal Blue Sapphire', 70000000, 'RG8570ZD J. Custom Electric Guitar, Royal Blue Sapphire.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>RG8570ZD J. Custom Electric Guitar, Royal Blue Sapphire</h3><p>70.000.000₫</p></div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="RG470DX-SFM Electric Guitar, Sea Foam Green Matte.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('RG470DX-SFM Electric Guitar, Sea Foam Green Matte', 10200000, 'RG470DX-SFM Electric Guitar, Sea Foam Green Matte.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>RG470DX-SFM Electric Guitar, Sea Foam Green Matte</h3><p>10.200.000₫</p></div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="RGA42FM-BLF Electric Guitar - Blue Lagoon Burst Flat.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('RGA42FM-BLF Electric Guitar - Blue Lagoon Burst Flat', 20500000, 'RGA42FM-BLF Electric Guitar - Blue Lagoon Burst Flat.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>RGA42FM-BLF Electric Guitar - Blue Lagoon Burst Flat</h3><p>20.500.000₫</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="collection-section" id="signature-collection">
+            <div class="collection-header">
+                <h2>Signature Collection</h2>
+                <div>
+                    <button class="nav-btn" onclick="sideScroll('list2', -310)"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="nav-btn" onclick="sideScroll('list2', 310)"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="product-slider" id="list2">
+                <div class="product-card">
+                    <div class="product-img"><img src="stevevai.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('JEMJR-WH Steve Vai Signature White', 14250000, 'stevevai.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>JEMJR-WH Steve Vai Signature Electric Guitar - White </h3><p>14.250.000₫</p></div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="JEMJRSP-PK Steve Vai Electric Guitar, Pink.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('JEMJRSP-PK Steve Vai Electric Guitar, Pink', 14250000, 'JEMJRSP-PK Steve Vai Electric Guitar, Pink.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>JEMJRSP-PK Steve Vai Electric Guitar, Pink</h3><p>14.250.000₫</p></div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="TOD10 Tim Henson Signature Electric Guitar - Classic Silver.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('TOD10 Tim Henson Signature Electric Guitar - Classic Silver', 43500000, 'stevevai.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>TOD10 Tim Henson Signature Electric Guitar in Silver</h3><p>43.500.000₫</p></div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="JS140M-SDL Joe Satriani Signature Electric Guitar, Soda Blue.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('JS140M-SDL Joe Satriani Signature Soda Blue', 15750000, 'JS140M-SDL Joe Satriani Signature Electric Guitar, Soda Blue.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>JS140M-SDL Joe Satriani Signature Electric Guitar, Soda Blue</h3><p>15.750.000₫</p></div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="Joe Satriani Signature JS2410 Electric Guitar - Sky Blue.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('Joe Satriani Signature JS2410 Sky Blue', 65000000, 'Joe Satriani Signature JS2410 Electric Guitar - Sky Blue.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>Joe Satriani Signature JS2410 Electric Guitar - Sky Blue</h3><p>65.000.000₫</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="collection-section" id="az-series">
+            <div class="collection-header">
+                <h2>AZ Series</h2>
+                <div>
+                    <button class="nav-btn" onclick="sideScroll('list3', -310)"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="nav-btn" onclick="sideScroll('list3', 310)"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="product-slider" id="list3">
+                <div class="product-card">
+                    <div class="product-img"><img src="2_8e484be0-c3a2-4c87-acb0-45fa2741645c.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('AZES40-TUN Tungsten', 9870000, '2_8e484be0-c3a2-4c87-acb0-45fa2741645c.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>AZES40-TUN Electric Guitar - Tungsten</h3><p>9.870.000₫</p></div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="AZ22S1F-TXB Electric Guitar, Transparent Turquoise Burst.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('AZ22S1F-TXB Transparent Turquoise Burst', 15850000, 'AZ22S1F-TXB Electric Guitar, Transparent Turquoise Burst.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>AZ22S1F-TXB Electric Guitar, Transparent Turquoise Burst</h3><p>15.850.000₫</p></div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="AZES31-VM Electric Guitar, Vermilion.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('AZES31-VM Vermilion', 9430000, 'AZES31-VM Electric Guitar, Vermilion.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>AZES31-VM Electric Guitar, Vermilion</h3><p>9.430.000₫</p></div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="AZES40-BLK Electric Guitar - Black.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('AZES40-BLK Black', 9870000, 'AZES40-BLK Electric Guitar - Black.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>AZES40-BLK Electric Guitar - Black</h3><p>9.870.000₫</p></div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="AZES40-PRB Electric Guitar - Purist Blue.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('AZES40-PRB Purist Blue', 9870000, 'AZES40-PRB Electric Guitar - Purist Blue.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>AZES40-PRB Electric Guitar - Purist Blue</h3><p>9.870.000₫</p></div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="AZ22S1F-TKS Electric Guitar, Transparent Black Sunburst.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('AZ22S1F-TKS Transparent Black Sunburst', 15850000, 'AZ22S1F-TKS Electric Guitar, Transparent Black Sunburst.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>AZ22S1F-TKS Electric Guitar, Transparent Black Sunburst</h3><p>15.850.000₫</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="collection-section" id="prestige-series">
+            <div class="collection-header">
+                <h2>AZ Prestige Series</h2>
+                <div>
+                    <button class="nav-btn" onclick="sideScroll('list_prestige', -310)"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="nav-btn" onclick="sideScroll('list_prestige', 310)"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="product-slider" id="list_prestige">
+                <div class="product-card">
+                    <div class="product-img"><img src="Prestige AZ2204N Electric Guitar - Antique White Blonde.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('AZ2204N Antique White Blonde', 59400000, 'Prestige AZ2204N Electric Guitar - Antique White Blonde.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>AZ2204N Electric Guitar - Antique White Blonde</h3><p>59.400.000₫</p></div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="Prestige AZ2204NW Electric Guitar - Dark Tide Blue.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('AZ2204NW Dark Tide Blue', 59400000, 'Prestige AZ2204NW Electric Guitar - Dark Tide Blue.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>AZ2204NW Electric Guitar - Dark Tide Blue</h3><p>59.400.000₫</p></div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="AZ2204N Electric Guitar - Prussian Blue Metallic.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('AZ2204N Prussian Blue Metallic', 56650000, 'AZ2204N Electric Guitar - Prussian Blue Metallic.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>AZ2204N Electric Guitar - Prussian Blue Metallic</h3><p>56.650.000₫</p></div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="AZ2204NW Electric Guitar - Mint Green.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('AZ2204NW Mint Green', 59400000, 'AZ2204NW Electric Guitar - Mint Green.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>AZ2204NW Electric Guitar - Mint Green</h3><p>59.400.000₫</p></div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="AZ2407F-SDE Electric Guitar Case, Sodalite.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('AZ2407F-SDE Sodalite', 65000000, 'AZ2407F-SDE Electric Guitar Case, Sodalite.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>AZ2407F-SDE Electric Guitar Case, Sodalite</h3><p>65.000.000₫</p></div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img"><img src="7 Strings AZ24047 - Black.webp"><div class="btn-group"><button class="action-btn" onclick="addToCart('7 Strings AZ24047 - Black', 45000000, '7 Strings AZ24047 - Black.webp')"><i class="fa-solid fa-cart-plus"></i></button></div></div>
+                    <div class="product-info"><h3>7 Strings AZ24047 - Black</h3><p>45.000.000₫</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact-section" id="contact-section">
+            <div class="contact-info">
+                <h2>Liên hệ với chúng tôi</h2>
+                <p>Trang web này là một dự án được tạo ra nhằm chăm sóc khách hàng cũng như phục vụ cho người chơi muốn tìm hiểu và sở hữu những cây đàn guitar theo sở thích cá nhân của bản thân.</p>
+                <div class="contact-details">
+                    <p><i class="fa-solid fa-location-dot"></i> Quang Trung, Go Vap, TP.HCM</p>
+                    <p><i class="fa-solid fa-phone"></i> +84 373 2827 50</p>
+                    <p><i class="fa-solid fa-envelope"></i> contact@ibanez-legacy.com</p>
+                    <p><i class="fa-solid fa-clock"></i> Mon - Fri: 09:00 - 18:00</p>
+                </div>
+            </div>
+            <div class="contact-form-card">
+                <h3>Gửi yêu cầu</h3>
+                <form id="contactForm">
+                    <div class="form-group"><input type="text" placeholder="Họ và tên" required></div>
+                    <div class="form-group"><input type="email" placeholder="Email liên hệ" required></div>
+                    <div class="form-group"><textarea rows="4" placeholder="Bạn cần chúng tôi giúp gì?" required></textarea></div>
+                    <button type="submit" class="submit-btn">Gửi lời nhắn</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>© 2026 IBANEZ BRANDS, INC. - ALL RIGHTS RESERVED</footer>
+
+    <script>
+        let cart = [];
+
+        // HÀM SEARCH LOGIC
+        // Hàm để bật/tắt thanh search
+function toggleSearch() {
+    const input = document.getElementById('searchInput');
+    input.classList.toggle('active');
+    if(input.classList.contains('active')) input.focus();
+}
+
+// Hàm lấy tất cả sản phẩm đang có trên trang của bạn để đưa vào bộ nhớ search
+function getAllProducts() {
+    const products = [];
+    document.querySelectorAll('.collection-section:not(#searchResultSection) .product-card').forEach(card => {
+        products.push({
+            name: card.querySelector('h3').innerText.toLowerCase(),
+            html: card.outerHTML // Giữ nguyên toàn bộ HTML bao gồm cả nút Add to cart của bạn
+        });
+    });
+    return products;
+}
+
+// Lắng nghe sự kiện gõ phím
+document.getElementById('searchInput').addEventListener('input', function(e) {
+    const key = e.target.value.toLowerCase().trim();
+    const section = document.getElementById('searchResultSection');
+    const list = document.getElementById('searchResultList');
+    const title = document.getElementById('searchTitle');
+    const allProducts = getAllProducts(); 
+
+    if (key.length > 0) {
+        const filtered = allProducts.filter(p => p.name.includes(key));
+        section.style.display = 'block';
+        if (filtered.length > 0) {
+            title.innerText = `Tìm thấy ${filtered.length} sản phẩm`;
+            list.innerHTML = filtered.map(p => p.html).join('');
+        } else {
+            title.innerText = "Không tìm thấy sản phẩm";
+            list.innerHTML = "";
+        }
+    } else {
+        section.style.display = 'none';
+    }
+});
+
+// Hàm đóng search
+function clearSearch() {
+    document.getElementById('searchInput').value = "";
+    document.getElementById('searchInput').classList.remove('active');
+    document.getElementById('searchResultSection').style.display = 'none';
+}
+
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const key = e.target.value.toLowerCase().trim();
+            const section = document.getElementById('searchResultSection');
+            const list = document.getElementById('searchResultList');
+            const title = document.getElementById('searchTitle');
+
+            if (key.length > 0) {
+                const filtered = productData.filter(p => p.name.includes(key));
+                section.style.display = 'block';
+                if (filtered.length > 0) {
+                    title.innerText = `Tìm thấy ${filtered.length} sản phẩm`;
+                    list.innerHTML = filtered.map(p => p.html).join('');
+                } else {
+                    title.innerText = "Không tìm thấy sản phẩm";
+                    list.innerHTML = "";
+                }
+                // Cuộn lên đầu kết quả tìm kiếm
+                window.scrollTo({ top: 100, behavior: 'smooth' });
+            } else {
+                clearSearch();
+            }
+        });
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = "";
+            document.getElementById('searchResultSection').style.display = 'none';
+        }
+
+        // CÁC HÀM CŨ GIỮ NGUYÊN
+        function toggleMenu() {
+            document.getElementById('menuOverlay').classList.toggle('active');
+            document.getElementById('menuBlur').style.display = document.getElementById('menuOverlay').classList.contains('active') ? 'block' : 'none';
+        }
+
+        function toggleCart() {
+            document.getElementById('cartOverlay').classList.toggle('active');
+            document.getElementById('cartBlur').style.display = document.getElementById('cartOverlay').classList.contains('active') ? 'block' : 'none';
+        }
+
+        function addToCart(name, price, img) {
+            const item = cart.find(i => i.name === name);
+            if (item) { item.qty++; } 
+            else { cart.push({ name, price, img, qty: 1 }); }
+            renderCart();
+            if(!document.getElementById('cartOverlay').classList.contains('active')) toggleCart();
+        }
+
+        function updateQty(index, delta) {
+            cart[index].qty += delta;
+            if (cart[index].qty < 1) cart.splice(index, 1);
+            renderCart();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cartContainer');
+            const footer = document.getElementById('cartFooter');
+            const subtotal = document.getElementById('cartSubtotal');
+            if (cart.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#999; margin-top:50px;">Giỏ hàng trống</p>';
+                footer.style.display = 'none';
+                return;
+            }
+            footer.style.display = 'block';
+            let html = ''; let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price * item.qty;
+                html += `
+                    <div class="cart-item">
+                        <img src="${item.img}">
+                        <div style="flex:1">
+                            <div style="font-size:13px; font-weight:bold;">${item.name}</div>
+                            <div class="qty-controls">
+                                <button class="qty-btn" onclick="updateQty(${index}, -1)">-</button>
+                                <span>${item.qty}</span>
+                                <button class="qty-btn" onclick="updateQty(${index}, 1)">+</button>
+                            </div>
+                        </div>
+                        <div style="font-weight:bold; font-size:13px;">${(item.price * item.qty).toLocaleString()}₫</div>
+                    </div>`;
+            });
+            container.innerHTML = html;
+            subtotal.innerText = total.toLocaleString() + '₫';
+        }
+
+        function sideScroll(id, offset) {
+            document.getElementById(id).scrollBy({ left: offset, behavior: 'smooth' });
+        }
+        
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Cảm ơn bạn! Yêu cầu của bạn đã được gửi thành công. Chúng tôi sẽ liên hệ lại sớm nhất.');
+            this.reset();
+        });
+
+    </script>
+</body>
+</html>
