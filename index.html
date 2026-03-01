@@ -181,6 +181,32 @@
         .submit-btn:hover { background: var(--ibanez-gold); transform: translateY(-3px); }
 
         footer { padding: 80px 50px 30px; border-top: 1px solid #eee; background: white; text-align: center; color: #bbb; font-size: 11px; }
+        /* Thêm style cho phần điều hướng trong footer */
+        .footer-nav {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        .footer-nav a {
+            text-decoration: none;
+            color: #555; /* Màu chữ trầm hơn để phân biệt với nội dung chính */
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 12px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .footer-nav a:hover {
+            color: var(--ibanez-gold);
+        }
+        .footer-divider {
+            width: 50px;
+            height: 1px;
+            background: #eee;
+            margin: 20px auto;
+        }
     </style>
 </head>
 <body id="home">
@@ -192,7 +218,7 @@
         </div>
         <ul class="menu-links">
             <li><a href="#home" onclick="toggleMenu()">Trang chủ</a></li>
-            <li><a href="#" onclick="toggleMenu()">Giới thiệu</a></li>
+            <li><a href="about_web.html" onclick="toggleMenu()">Giới thiệu</a></li>
             <li><a href="products.html" onclick="toggleMenu()">Thư viện sản phẩm</a></li>
             <li><a href="#contact-section" onclick="toggleMenu()">Liên hệ</a></li>
         </ul>
@@ -221,14 +247,14 @@
             <button class="icon-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button>
 
         </div>
-        <a href="#" class="logo"><img src="C:\Users\Hai\Downloads\ST6\Ibanez_Logo.png" alt="Logo"></a>
+        <a href="#" class="logo"><img src="Ibanez_Logo.png" alt="Logo"></a>
         <div class="header-right">
             <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
             <button class="icon-btn" id="cartBtn" onclick="toggleCart()"><i class="fa-solid fa-bag-shopping"></i></button>
         </div>
     </header>
 
-    <section class="hero"><img src="C:\Users\Hai\Downloads\ST6\Ibanez_Logo.png" alt="Ibanez Logo" class="hero-logo"></section>
+    <section class="hero"><img src="Ibanez_Logo.png" alt="Ibanez Logo" class="hero-logo"></section>
 
     <section class="category-nav">
     <div class="nav-card" style="background-image: url('RG.jpg');">
@@ -246,7 +272,7 @@
         <h2 style="text-align: center; letter-spacing: 5px; margin-bottom: 20px; text-transform: uppercase;">Thư mụ c sản phẩm</h2>
         
         <div class="slider-controls">
-            <a href="file:///C:/Users/Hai/Downloads/ST6/products.html" class="view-all-link">Hiện tất cả</a>
+            <a href="products.html" class="view-all-link">Hiện tất cả</a>
             <button class="control-btn" onclick="slideScroll(-325)"><i class="fa-solid fa-chevron-left"></i></button>
             <button class="control-btn" onclick="slideScroll(325)"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
@@ -340,7 +366,18 @@
         </div>
     </section>
 
-    <footer id="footer"><div class="footer-bottom">© 2026 IBANEZ BRANDS, INC.</div></footer>
+    <footer id="footer">
+        <div class="footer-nav">
+            <a href="#home">Trang chủ</a>
+            <a href="about_web.html">Giới thiệu</a>
+            <a href="products.html">Thư viện sản phẩm</a>
+            <a href="#contact-section">Liên hệ</a>
+        </div>
+
+        <div class="footer-divider"></div>
+
+        <div class="footer-bottom">© 2026 IBANEZ BRANDS, INC.</div>
+    </footer>
 
     <script>
         let cart = [];

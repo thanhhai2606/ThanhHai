@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ibanez Legacy - The Evolution</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --ibanez-gold: #b59a5d;
+            --text-dark: #1a1a1a;
+            --gray-soft: #f8f8f8;
+            --white: #ffffff;
+        }
+
+        /* Tối ưu cuộn mượt toàn trang */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body { 
+            margin: 0; padding: 0; 
+            background-color: var(--white); 
+            color: var(--text-dark); 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- HERO SECTION VỚI HIỆU ỨNG ZOOM --- */
+        .brand-hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url('wallpaper4.jpg');
+            background-size: cover;
+            background-position: center;
+            transform: scale(1.1);
+            animation: heroZoom 10s infinite alternate;
+        }
+
+        @keyframes heroZoom {
+            from { transform: scale(1); }
+            to { transform: scale(1.15); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(3rem, 10vw, 6rem);
+            text-transform: uppercase;
+            letter-spacing: 15px;
+            margin: 0;
+            background: linear-gradient(to right, #fff, var(--ibanez-gold), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- SECTION DECOR --- */
+        .section-title {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+        .section-title h2 {
+            font-size: 36px;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            position: relative;
+            display: inline-block;
+        }
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -15px; left: 50%;
+            width: 60px; height: 3px;
+            background: var(--ibanez-gold);
+            transform: translateX(-50%);
+        }
+
+ /* --- STORY SECTION (ĐÃ CẬP NHẬT) --- */
+        .story-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px; /* Tăng khoảng cách giữa ảnh và chữ */
+            padding: 100px 10%; /* Tăng khoảng đệm hai bên để thu hẹp nội dung tổng thể */
+            align-items: center;
+        }
+
+        .story-img-wrapper {
+            position: relative;
+            max-width: 85%; /* Giới hạn độ rộng của khung chứa ảnh */
+            margin: 0 auto; /* Căn giữa khung ảnh trong cột */
+        }
+
+        .story-img-wrapper img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px; /* Bo góc nhẹ cho hiện đại */
+            filter: grayscale(0.5);
+            transition: 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); /* Thêm đổ bóng nhẹ để ảnh có chiều sâu */
+        }
+
+        .story-img-wrapper:hover img {
+            filter: grayscale(0);
+            transform: translateY(-10px); /* Hiệu ứng nhấc lên nhẹ khi hover */
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+        }
+
+        /* --- MOUSE SCROLL INDICATOR --- */
+        .mouse-scroll {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 25px; height: 45px;
+            border: 2px solid white;
+            border-radius: 20px;
+            z-index: 2;
+        }
+        .mouse-scroll::before {
+            content: '';
+            position: absolute;
+            top: 10px; left: 50%;
+            width: 6px; height: 6px;
+            background: white;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            animation: scrollWheel 2s infinite;
+        }
+
+        @keyframes scrollWheel {
+            0% { opacity: 1; transform: translate(-50%, 0); }
+            100% { opacity: 0; transform: translate(-50%, 20px); }
+        }
+
+        /* --- PARALLAX BANNER --- */
+        .parallax-banner {
+            height: 400px;
+            background: fixed center/cover url('wallpaper.webp');
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 10px;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+/* --- CONTACT SECTION (NEW) --- */
+        .contact-section {
+            padding: 100px 50px;
+            background: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 50px;
+        }
+        .contact-info { flex: 1; }
+        .contact-info h2 { font-size: 32px; letter-spacing: 3px; margin-bottom: 20px; text-transform: uppercase; }
+        .contact-details { margin-top: 30px; line-height: 2; }
+        .contact-details i { color: var(--ibanez-gold); width: 25px; }
+
+        .contact-form-card {
+            flex: 0 0 380px; /* Độ rộng nhỏ gọn ở một góc */
+            background: var(--gray-soft);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(61, 61, 61, 0.05);
+        }
+        .contact-form-card h3 { margin-top: 0; margin-bottom: 25px; text-transform: uppercase; font-size: 18px; letter-spacing: 2px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 8px; 
+            box-sizing: border-box; font-family: inherit; transition: 0.3s;
+        }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--ibanez-gold); background: white; }
+        .submit-btn {
+            width: 100%; padding: 18px; background: var(--text-dark); color: white; 
+            border: none; font-weight: bold; cursor: pointer; border-radius: 50px; 
+            text-transform: uppercase; transition: 0.3s;
+        }
+        .submit-btn:hover { background: var(--ibanez-gold); transform: translateY(-3px); }
+
+        footer { padding: 80px 50px 30px; border-top: 1px solid #eee; background: white; text-align: center; color: #bbb; font-size: 11px; }
+        /* --- FOOTER --- */
+        footer {
+            padding: 50px;
+            background: var(--text-dark);
+            color: rgba(255,255,255,0.3);
+            text-align: center;
+            font-size: 13px;
+        }
+        /* --- COPY TỪ INDEX: HEADER & NAVIGATION --- */
+       /* --- HEADER --- */
+        header {
+            position: fixed; top: 0; left: 0; right: 0; padding: 25px 50px;
+            display: grid; 
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            z-index: 1000; box-sizing: border-box; transition: 0.4s;
+            background: transparent;
+        }
+
+        header.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 15px 50px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+
+        .header-left, .header-right { display: flex; gap: 15px; }
+        .header-left { justify-content: flex-start; }
+        .header-right { justify-content: flex-end; }
+
+        .logo { display: flex; justify-content: center; width: 150px; }
+        .logo img {
+            height: 40px; width: auto; transition: 0.3s ease;
+            filter: brightness(0) invert(1); 
+        }
+        header.scrolled .logo img { filter: brightness(0); }
+
+        .icon-btn {
+            background: none; border: none; font-size: 18px;
+            cursor: pointer; transition: 0.3s; padding: 10px; color: white; 
+        }
+        header.scrolled .icon-btn { color: var(--text-dark); }
+               /* --- GIỎ HÀNG --- */
+        #cartBlur { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1999; display: none; }
+        .cart-overlay {
+            position: fixed; top: 0; right: -400px; width: 350px; height: 100vh;
+            background: white; z-index: 2000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -5px 0 30px rgba(0,0,0,0.1); padding: 30px;
+            display: flex; flex-direction: column; box-sizing: border-box;
+        }
+        .cart-overlay.active { right: 0; }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        #cartContainer { flex-grow: 1; overflow-y: auto; }
+        .empty-cart-msg { text-align: center; color: #999; margin-top: 50px; font-style: italic; }
+        .cart-item { display: flex; gap: 15px; margin-bottom: 20px; align-items: center; border-bottom: 1px solid #f9f9f9; padding-bottom: 15px; }
+        .cart-item img { width: 60px; height: 60px; object-fit: contain; background: #f9f9f9; }
+        .item-qty-controls { display: flex; align-items: center; gap: 10px; margin-top: 50px; }
+        .qty-mini-btn { width: 22px; height: 22px; border: 1px solid #ddd; background: none; cursor: pointer; }
+        .cart-footer { margin-top: 20px; padding-top: 15px; border-top: 2px solid #eee; display: none; }
+        .cart-footer.show { display: block; }
+        .total-row { display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; margin-bottom: 20px; }
+               /* --- MENU SIDEBAR --- */
+        #menuBlur { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2999; display: none; }
+        .menu-overlay {
+            position: fixed; top: 0; left: -320px; width: 300px; height: 100vh;
+            background: white; z-index: 3000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 5px 0 30px rgba(0,0,0,0.1); padding: 40px 30px;
+            box-sizing: border-box;
+        }
+        .menu-overlay.active { left: 0; }
+        .menu-links { list-style: none; padding: 0; margin: 40px 0 0 0; }
+        .menu-links li { margin-bottom: 25px; }
+        .menu-links a { 
+            text-decoration: none; color: var(--text-dark); font-size: 18px; 
+            font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
+            transition: 0.3s; display: block;
+        }
+        .menu-links a:hover { color: var(--ibanez-gold); transform: translateX(10px); }
+               /* Thêm style cho phần điều hướng trong footer */
+        .footer-nav {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        .footer-nav a {
+            text-decoration: none;
+            color: #555; /* Màu chữ trầm hơn để phân biệt với nội dung chính */
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 12px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .footer-nav a:hover {
+            color: var(--ibanez-gold);
+        }
+        .footer-divider {
+            width: 50px;
+            height: 1px;
+            background: #eee;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="menuBlur" onclick="toggleMenu()"></div>
+    <div class="menu-overlay" id="menuOverlay">
+        <div style="text-align: right;"><span style="cursor:pointer; font-size: 32px;" onclick="toggleMenu()">&times;</span></div>
+        <ul class="menu-links">
+            <li><a href="index.html">Trang chủ</a></li>
+            <li><a href="#">Giới thiệu</a></li>
+            <li><a href="products.html">Thư viện sản phẩm</a></li>
+            <li><a href="index.html#contact-section">Liên hệ</a></li>
+        </ul>
+    </div>
+
+    <div id="cartBlur" onclick="toggleCart()"></div>
+    <div class="cart-overlay" id="cartOverlay">
+        <div class="cart-header">
+            <h3 style="margin:0">Giỏ hàng</h3>
+            <span style="cursor:pointer; font-size: 28px;" onclick="toggleCart()">&times;</span>
+        </div>
+        <div id="cartContainer"><div class="empty-cart-msg">Giỏ hàng của bạn đang trống</div></div>
+        <div class="cart-footer" id="cartFooter">
+            <div class="total-row" style="display:flex; justify-content: space-between; font-weight: bold; margin-bottom: 15px;">
+                <span>TỔNG CỘNG:</span> <span id="cartSubtotal" style="color: var(--ibanez-gold);">0₫</span>
+            </div>
+            <button style="width: 100%; padding: 18px; background: var(--text-dark); color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 50px;">THANH TOÁN</button>
+        </div>
+    </div>
+
+    <header id="header">
+        <div class="header-left">
+            <button class="icon-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button>
+
+        </div>
+        <a href="#" class="logo"><img src="C:\Users\Hai\Downloads\ST6\Ibanez_Logo.png" alt="Logo"></a>
+        <div class="header-right">
+            <button class="icon-btn"><i class="fa-solid fa-heart"></i></button>
+            <button class="icon-btn" id="cartBtn" onclick="toggleCart()"><i class="fa-solid fa-bag-shopping"></i></button>
+        </div>
+    </header>
+
+    <section class="brand-hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content" data-aos="zoom-in" data-aos-duration="1500">
+            <p style="letter-spacing: 8px;">ESTABLISHED 1908</p>
+            <h1>IBANEZ</h1>
+            <p style="font-style: italic; opacity: 0.8;">"Beyond the speed of sound"</p>
+        </div>
+        <div class="mouse-scroll"></div>
+    </section>
+
+    <section class="story-container">
+        <div class="story-img-wrapper" data-aos="fade-right">
+            <img src="Steve_Vai2.webp" alt="Heritage">
+        </div>
+        <div class="story-text" data-aos="fade-left" data-aos-delay="200">
+            <div class="section-title" style="text-align: left;">
+                <h2>Di sản tốc độ</h2>
+            </div>
+            <p>Ibanez không đi theo lối mòn. Chúng tôi kiến tạo con đường riêng cho những nghệ sĩ muốn chinh phục những kỹ thuật khó nhất.</p>
+            <p>Từ Nagoya đến toàn thế giới, mỗi cây đàn mang logo Ibanez là một lời cam kết về <span style="color: var(--ibanez-gold); font-weight: bold;">sự chính xác, tốc độ và cảm xúc mãnh liệt.</span></p>
+        </div>
+    </section>
+
+    <div class="parallax-banner">
+        Prestige & Innovation
+    </div>
+
+    <section style="padding: 100px 5%; background: var(--gray-soft);">
+        <div class="section-title" data-aos="fade-up">
+            <h2>Tại sao chọn Ibanez?</h2>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+            <div style="text-align: center; padding: 30px;" data-aos="fade-up" data-aos-delay="100">
+                <i class="fa-solid fa-bolt" style="font-size: 40px; color: var(--ibanez-gold); margin-bottom: 20px;"></i>
+                <h3>Cần đàn Super Wizard</h3>
+                <p>Mỏng nhất thế giới, tối ưu cho tốc độ lướt ngón đỉnh cao.</p>
+            </div>
+            <div style="text-align: center; padding: 30px;" data-aos="fade-up" data-aos-delay="200">
+                <i class="fa-solid fa-microchip" style="font-size: 40px; color: var(--ibanez-gold); margin-bottom: 20px;"></i>
+                <h3>Công nghệ Edge Tremolo</h3>
+                <p>Hệ thống nhún giữ dây ổn định tuyệt đối sau mọi cú "dive bomb".</p>
+            </div>
+            <div style="text-align: center; padding: 30px;" data-aos="fade-up" data-aos-delay="300">
+                <i class="fa-solid fa-guitar" style="font-size: 40px; color: var(--ibanez-gold); margin-bottom: 20px;"></i>
+                <h3>Âm sắc đa dạng</h3>
+                <p>Từ sự ngọt ngào của Jazz đến sự bùng nổ của Death Metal.</p>
+            </div>
+        </div>
+    </section>
+    <section class="contact-section" id="contact-section">
+        <div class="contact-info">
+            <h2>Liên hệ với chúng tôi</h2>
+            <p>Trang web này là một dự án được tạo ra nhằm chăm sóc khách hàng cũng như phục vụ cho người chơi muốn tìm hiểu và sở hữu những cây đàn guitar theo sở thích cá nhân của bản thân. 
+                Liên hệ để được ban chăm sóc khách hàng dễ dàng trả lời những thắc mắc của bạn.</p>
+            
+            <div class="contact-details">
+                <p><i class="fa-solid fa-location-dot"></i> Quang Trung, Go Vap, TP.HCM</p>
+                <p><i class="fa-solid fa-phone"></i> +84 373 2827 50</p>
+                <p><i class="fa-solid fa-envelope"></i> contact@ibanez-legacy.com</p>
+                <p><i class="fa-solid fa-clock"></i> Mon - Fri: 09:00 - 18:00</p>
+            </div>
+        </div>
+
+        <div class="contact-form-card">
+            <h3>Gửi yêu cầu</h3>
+            <form id="contactForm">
+                <div class="form-group">
+                    <input type="text" placeholder="Họ và tên" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" placeholder="Email liên hệ" required>
+                </div>
+                <div class="form-group">
+                    <textarea rows="4" placeholder="Bạn cần chúng tôi giúp gì?" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Gửi lời nhắn</button>
+            </form>
+        </div>
+    </section>
+
+     <footer id="footer">
+        <div class="footer-nav">
+            <a href="index.html">Trang chủ</a>
+            <a href="about_web.html">Giới thiệu</a>
+            <a href="products.html">Thư viện sản phẩm</a>
+            <a href="#contact-section">Liên hệ</a>
+        </div>
+
+        <div class="footer-divider"></div>
+
+        <div class="footer-bottom">© 2026 IBANEZ BRANDS, INC.</div>
+    </footer>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Khởi tạo hiệu ứng cuộn
+        AOS.init({
+            duration: 1000, // Độ dài hiệu ứng (ms)
+            once: false,    // Hiệu ứng lặp lại khi cuộn lên xuống
+            mirror: true    // Cho phép hiệu ứng khi cuộn ngược lên
+        });
+        // Xử lý cuộn Header
+        window.addEventListener('scroll', () => {
+            document.getElementById('header').classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // Toggle Menu & Cart
+        function toggleMenu() {
+            const menu = document.getElementById('menuOverlay');
+            const blur = document.getElementById('menuBlur');
+            menu.classList.toggle('active');
+            blur.style.display = menu.classList.contains('active') ? 'block' : 'none';
+        }
+
+        function toggleCart() {
+            const overlay = document.getElementById('cartOverlay');
+            const blur = document.getElementById('cartBlur');
+            overlay.classList.toggle('active');
+            blur.style.display = overlay.classList.contains('active') ? 'block' : 'none';
+        }
+
+        // Khởi tạo AOS đã có sẵn trong code của bạn
+        AOS.init({ duration: 1000, once: false, mirror: true });
+        // Xử lý gửi Form
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Cảm ơn bạn! Yêu cầu của bạn đã được gửi thành công. Chúng tôi sẽ liên hệ lại sớm nhất.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>
